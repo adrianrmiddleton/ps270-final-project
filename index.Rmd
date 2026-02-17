@@ -1,7 +1,7 @@
 ---
 title: "PS270 Final Project"
-author: "Your Name Here"
-description: "My final project"
+author: "Adrian Middleton"
+description: "Casual Trends of Political Ideology"
 output:
   distill::distill_article:
     self_contained: false
@@ -9,6 +9,6 @@ output:
 
 
 
-## Project thoughts
+## Project Thoughts
 
-I am interested in exploring data related to...
+For this final project, I hope to find and analyze data regarding national trends in political ideology.
