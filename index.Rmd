@@ -1,7 +1,7 @@
 ---
 title: "PS270 Final Project"
 author: "Adrian Middleton"
-description: "Casual Trends of Political Ideology"
+description: "Casual Trends of Political Ideology and Education"
 output:
   distill::distill_article:
     self_contained: false
@@ -11,4 +11,15 @@ output:
 
 ## Project Thoughts
 
-For this final project, I hope to find and analyze data regarding national trends in political ideology.
+For this final project, I hope to find and analyze data regarding national trends in political ideology and education.
+
+RQ: To what effect does education impact the political ideology of a state?
+
+My hypothesis in regard to this research question is that there is a significant casual correlation between education and political ideology (based on voting behavior). My theory is that populations that receive better educations (specifically in the humanities) may have a better understanding of national and global trends and circumstances, which in turn would likely impact their voting behavior.  One particular variable of interest (education level) comes from the National Center for Education Statistics. I have loaded data below from their "The Nation's Report Card" database, which includes education "scores" for each U.S. state along with percentages of students "above basic" or "above proficient" skills in different subjects. The score is based on comparisons among the states with a higher score demonstrating better education. I will likely also try to find data regarding levels of higher education in each state, as this would also be useful in showing a correlation between education in general and ideology. The outcome variable of interest would be the political ideology of each state which I will likely determine simply based on the percentage of votes for each major party candidate in either the 2020 or 2024 U.S. presidential election. For now I will use the election data set that we already have for the class, but I will likely try to find an alternative data set specially pertaining to the 2024 election. My hypothesis could be supported by a strong positive or negative correlation between education levels and voting behavior, but a small or less clear correlation would disprove my hypothesis that there is a significant casual correlation between these two variables.
+
+```{r}
+library(tidyverse)
+NCES <- read_csv("data/SPCsv202603032118.csv")
+head(NCES)
+```
+
