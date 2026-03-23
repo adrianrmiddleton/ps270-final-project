@@ -22,4 +22,19 @@ library(tidyverse)
 NCES <- read_csv("data/SPCsv202603032118.csv")
 head(NCES)
 ```
+```{r}
+NCES <- filter(NCES, Jurisdiction != "DoDEA")
+NCES <- filter(NCES, Jurisdiction != "Puerto Rico")
+NCES <- filter(NCES, Jurisdiction != "District of Columbia")
+NCES <- filter(NCES, Jurisdiction != "National public")
+```
+
+```{r}
+ggplot(data = NCES, aes(x = MN)) + geom_histogram() + labs(title = "State Mathematics Performance Score", y = "Count", x = "Score")
+```
+
+
+
+
+
 
