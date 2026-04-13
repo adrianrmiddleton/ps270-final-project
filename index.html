@@ -116,7 +116,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["Data/SPCsv202603032118.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["Data/2024-electoral-states.csv","Data/SPCsv202603032118.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-6-1.png","index_files/figure-html5/unnamed-chunk-7-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1552,6 +1552,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
 <span><span class='va'>NCES</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"data/SPCsv202603032118.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>ElectionData</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"data/2024-electoral-states.csv"</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>NCES</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 6 × 6
@@ -1578,7 +1579,130 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" alt="" width="624" /></p>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>NCES</span></span></code></pre>
+</div>
+<pre><code># A tibble: 50 × 6
+   Jurisdiction     MN SigDiff SigSymbol    AB    AP
+   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
+ 1 Massachusetts   246 9       ▲            82    51
+ 2 Florida         243 6       ▲            82    45
+ 3 Wyoming         243 6       ▲            83    46
+ 4 New Hampshire   242 4       ▲            81    43
+ 5 Utah            242 4       ▲            79    45
+ 6 North Dakota    241 4       ▲            81    43
+ 7 Minnesota       241 3       ▲            78    45
+ 8 Texas           241 3       ▲            79    43
+ 9 Indiana         240 3       ♦            79    43
+10 New Jersey      240 3       ♦            77    44
+# ℹ 40 more rows</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>ElectionData</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"Jurisdiction"</span></span>
+<span><span class='va'>ElectionData</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ElectionData</span>, <span class='va'>Jurisdiction</span> <span class='op'>!=</span> <span class='st'>"District of Columbia"</span><span class='op'>)</span></span>
+<span><span class='va'>ElectionData</span></span></code></pre>
+</div>
+<pre><code># A tibble: 50 × 55
+   GEOIDFQ     Jurisdiction ST    Square_Miles Latitude Longitude
+   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+ 1 0400000US01 Alabama      AL           50651     32.8     -86.8
+ 2 0400000US02 Alaska       AK          571049     63.9    -152. 
+ 3 0400000US04 Arizona      AZ          113655     34.3    -112. 
+ 4 0400000US05 Arkansas     AR           51992     34.9     -92.4
+ 5 0400000US06 California   CA          155858     37.2    -119. 
+ 6 0400000US08 Colorado     CO          103637     39      -106. 
+ 7 0400000US09 Connecticut  CT            4842     41.6     -72.7
+ 8 0400000US10 Delaware     DE            1949     39.0     -75.5
+ 9 0400000US12 Florida      FL           53654     28.6     -82.5
+10 0400000US13 Georgia      GA           57716     32.6     -83.4
+# ℹ 40 more rows
+# ℹ 49 more variables: Electoral_College &lt;dbl&gt;, Winner_2024 &lt;chr&gt;,
+#   Votes_Dem_2024 &lt;dbl&gt;, Percent_Dem_2024 &lt;dbl&gt;,
+#   Votes_GOP_2024 &lt;dbl&gt;, Percent_GOP_2024 &lt;dbl&gt;,
+#   Votes_Other_2024 &lt;dbl&gt;, Percent_Other_2024 &lt;dbl&gt;,
+#   Winner_2020 &lt;chr&gt;, Votes_Dem_2020 &lt;dbl&gt;, Percent_Dem_2020 &lt;dbl&gt;,
+#   Votes_GOP_2020 &lt;dbl&gt;, Percent_GOP_2020 &lt;dbl&gt;, …</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>NewElectionData</span> <span class='op'>&lt;-</span> <span class='va'>ElectionData</span> <span class='op'>[</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Jurisdiction"</span>,<span class='st'>"ST"</span>, <span class='st'>"Winner_2024"</span>, <span class='st'>"Percent_Dem_2024"</span>, <span class='st'>"Percent_GOP_2024"</span>, <span class='st'>"Percent_Other_2024"</span>, <span class='st'>"Percent_Bachelors_Degree"</span><span class='op'>)</span> <span class='op'>]</span></span>
+<span><span class='va'>NewElectionData</span> <span class='op'>&lt;-</span> <span class='va'>NewElectionData</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span><span class='va'>NCES</span>, by <span class='op'>=</span> <span class='st'>"Jurisdiction"</span><span class='op'>)</span></span>
+<span><span class='va'>NewElectionData</span></span></code></pre>
+</div>
+<pre><code># A tibble: 50 × 12
+   Jurisdiction ST    Winner_2024    Percent_Dem_2024 Percent_GOP_2024
+   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;                     &lt;dbl&gt;            &lt;dbl&gt;
+ 1 Alabama      AL    Donald J. Tru…             34.1             64.6
+ 2 Alaska       AK    Donald J. Tru…             41.4             54.5
+ 3 Arizona      AZ    Donald J. Tru…             46.7             52.2
+ 4 Arkansas     AR    Donald J. Tru…             33.6             64.2
+ 5 California   CA    Kamala D. Har…             58.5             38.3
+ 6 Colorado     CO    Kamala D. Har…             54.2             43.2
+ 7 Connecticut  CT    Kamala D. Har…             56.4             41.9
+ 8 Delaware     DE    Kamala D. Har…             56.6             41.9
+ 9 Florida      FL    Donald J. Tru…             43.0             56.1
+10 Georgia      GA    Donald J. Tru…             48.5             50.7
+# ℹ 40 more rows
+# ℹ 7 more variables: Percent_Other_2024 &lt;dbl&gt;,
+#   Percent_Bachelors_Degree &lt;dbl&gt;, MN &lt;dbl&gt;, SigDiff &lt;chr&gt;,
+#   SigSymbol &lt;chr&gt;, AB &lt;dbl&gt;, AP &lt;dbl&gt;</code></pre>
+</div>
+<p>After joining the election data with the NCES education data, we can use this new dataset I have created to observe trends and potential correlations between ideology and quality of education.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>NewElectionData</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>MN</span>, y <span class='op'>=</span> <span class='va'>Percent_Dem_2024</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-6-1.png" alt="" width="624" /></p>
+</div>
+<p>The scatterplot above demonstrates a small negative correlation between states having higher percentages of democratic voters and K-12 mathematics scores.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>NewElectionData</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Percent_Bachelors_Degree</span>, y <span class='op'>=</span> <span class='va'>Percent_Dem_2024</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-7-1.png" alt="" width="624" /></p>
+</div>
+<p>The scatterplot above demonstrates a significant postive correlation between states having higher percentages of democratic voters and higher percentages of people who have at least a Bachelors Degree scores.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>WinnerStats</span> <span class='op'>&lt;-</span> <span class='va'>NewElectionData</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Winner_2024</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Percent_Bachelors_Degree</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>MN</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>WinnerStats</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"States Won By:"</span>, <span class='st'>"Mean Percent Bachelors"</span>, <span class='st'>"Mean Mathematics Score"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">States Won By:</th>
+<th style="text-align: right;">Mean Percent Bachelors</th>
+<th style="text-align: right;">Mean Mathematics Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Donald J. Trump</td>
+<td style="text-align: right;">19.56452</td>
+<td style="text-align: right;">237.1290</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kamala D. Harris</td>
+<td style="text-align: right;">23.05263</td>
+<td style="text-align: right;">236.3158</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The table above summarizes some of the trends I have noticed throughout my project. These results represent my current analysis in attempting to answer my research question. I have much more work to do, but my research thus far has yielded mixed results in regard to my general claim that more educated states will have more progressive populations. It seems as though more Democratic states have a stronger inclination towards higher education, but perhaps more Republican states may have more robust K-12 educations on average. It definetly seems as though there are some causal trends between education and ideology, but I will have to work further to prove that they are in fact casual and provide a more concrete answer to my initial research question.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

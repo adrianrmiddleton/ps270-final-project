@@ -20,6 +20,7 @@ My hypothesis in regard to this research question is that there is a significant
 ```{r}
 library(tidyverse)
 NCES <- read_csv("data/SPCsv202603032118.csv")
+ElectionData <- read_csv("data/2024-electoral-states.csv")
 head(NCES)
 ```
 ```{r}
@@ -33,8 +34,46 @@ NCES <- filter(NCES, Jurisdiction != "National public")
 ggplot(data = NCES, aes(x = MN)) + geom_histogram() + labs(title = "State Mathematics Performance Score", y = "Count", x = "Score")
 ```
 
+```{r}
+NCES
+names(ElectionData)[2] <- "Jurisdiction"
+ElectionData <- filter(ElectionData, Jurisdiction != "District of Columbia")
+ElectionData
+```
+```{r}
+NewElectionData <- ElectionData [, c("Jurisdiction","ST", "Winner_2024", "Percent_Dem_2024", "Percent_GOP_2024", "Percent_Other_2024", "Percent_Bachelors_Degree") ]
+NewElectionData <- NewElectionData |>
+  left_join(NCES, by = "Jurisdiction")
+NewElectionData
+```
 
 
+After joining the election data with the NCES education data, we can use this new dataset I have created to observe trends and potential correlations between ideology and quality of education.
 
+```{r}
+NewElectionData |>
+  ggplot(aes(x = MN, y = Percent_Dem_2024)) + geom_point() +
+  geom_smooth(method = "lm")
+```
 
+The scatterplot above demonstrates a small negative correlation between states having higher percentages of democratic voters and K-12 mathematics scores.
 
+```{r}
+NewElectionData |>
+  ggplot(aes(x = Percent_Bachelors_Degree, y = Percent_Dem_2024)) + geom_point() +
+  geom_smooth(method = "lm")
+```
+
+The scatterplot above demonstrates a significant postive correlation between states having higher percentages of democratic voters and higher percentages of people who have at least a Bachelors Degree scores.
+
+```{r}
+WinnerStats <- NewElectionData |>
+  group_by(Winner_2024) |>
+  summarize(mean(Percent_Bachelors_Degree), mean(MN))
+```
+```{r}
+WinnerStats |>
+  knitr::kable(col.names = c("States Won By:", "Mean Percent Bachelors", "Mean Mathematics Score"))
+```
+
+The table above summarizes some of the trends I have noticed throughout my project. These results represent my current analysis in attempting to answer my research question. I have much more work to do, but my research thus far has yielded mixed results in regard to my general claim that more educated states will have more progressive populations. It seems as though more Democratic states have a stronger inclination towards higher education, but perhaps more Republican states may have more robust K-12 educations on average. It definetly seems as though there are some causal trends between education and ideology, but I will have to work further to prove that they are in fact casual and provide a more concrete answer to my initial research question.
