@@ -51,17 +51,19 @@ NewElectionData
 After joining the election data with the NCES education data, we can use this new dataset I have created to observe trends and potential correlations between ideology and quality of education.
 
 ```{r}
-NewElectionData |>
+Plot1 <- NewElectionData |>
   ggplot(aes(x = MN, y = Percent_Dem_2024)) + geom_point() +
   geom_smooth(method = "lm")
+Plot1
 ```
 
 The scatterplot above demonstrates a small negative correlation between states having higher percentages of democratic voters and K-12 mathematics scores.
 
 ```{r}
-NewElectionData |>
+Plot2 <- NewElectionData |>
   ggplot(aes(x = Percent_Bachelors_Degree, y = Percent_Dem_2024)) + geom_point() +
   geom_smooth(method = "lm")
+Plot2
 ```
 
 The scatterplot above demonstrates a significant postive correlation between states having higher percentages of democratic voters and higher percentages of people who have at least a Bachelors Degree scores.
