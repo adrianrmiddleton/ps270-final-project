@@ -9,69 +9,147 @@ output:
 
 
 
-## Project Thoughts
+## Introduction
 
 For this final project, I hope to find and analyze data regarding national trends in political ideology and education.
 
-RQ: To what effect does education impact the political ideology of a state?
+Research Question: To what effect does education impact the political ideology of a state?
 
-My hypothesis in regard to this research question is that there is a significant casual correlation between education and political ideology (based on voting behavior). My theory is that populations that receive better educations (specifically in the humanities) may have a better understanding of national and global trends and circumstances, which in turn would likely impact their voting behavior.  One particular variable of interest (education level) comes from the National Center for Education Statistics. I have loaded data below from their "The Nation's Report Card" database, which includes education "scores" for each U.S. state along with percentages of students "above basic" or "above proficient" skills in different subjects. The score is based on comparisons among the states with a higher score demonstrating better education. I will likely also try to find data regarding levels of higher education in each state, as this would also be useful in showing a correlation between education in general and ideology. The outcome variable of interest would be the political ideology of each state which I will likely determine simply based on the percentage of votes for each major party candidate in either the 2020 or 2024 U.S. presidential election. For now I will use the election data set that we already have for the class, but I will likely try to find an alternative data set specially pertaining to the 2024 election. My hypothesis could be supported by a strong positive or negative correlation between education levels and voting behavior, but a small or less clear correlation would disprove my hypothesis that there is a significant casual correlation between these two variables.
+My hypothesis in regard to this research question is that there is a significant casual correlation between education and political ideology (based on voting behavior). My theory is that populations that receive better educations may have a better understanding of national and global trends and circumstances along with stronger critical thinking skills, which in turn would likely impact their voting behavior. My hypothesis could be supported by a strong positive or negative correlation between education levels and voting behavior, but a small or less clear correlation would disprove my hypothesis that there is a significant casual correlation between these two variables. As for my research method, I will run a cross-sectional analysis and regressions on the outcome variable of state ideology (based on state-wide voting percentages in the 2024 presidential election) with the predicting variables as grade school mathematics scores, and percentage of people within a state who have a bachelors degree or higher. This research is incredibly important as it can help provide insight on the broader impacts of education and the implications of certain voting behaviors in the United States. Furthermore, if my hypothesis is correct and higher quality education does affect the political ideology of United States citizens, then perhaps more can be said about how informed voters feel on certain issues. This of course would have to be backed by further research, but the existence of correlation between education and ideology could lay the groundwork for related questions.
+
+## Data
+```{r, echo=FALSE}
+library(tidyverse)
+library(knitr)
+library(modelsummary)
+NCES <- read_csv("data/SPCsv202604014211.csv")
+ElectionData <- read_csv("data/2024-electoral-states.csv")
+```
+
+For this research I am particularly interested in three variables: quality of education by state, higher education metrics by state, and ideology by state. 
+
+Data pertaining to one particular predicting variable of interest (quality of education) comes from the National Center for Education Statistics. I have loaded data below from their "The Nation's Report Card" database, which includes education "scores" for each U.S. state along with percentages of students "above basic" or "above proficient" skills in different subjects. The score is based on comparisons among the states with a higher score demonstrating better education. The dataset I have loaded specifically pertains to 8th grade mathematics scores. While I yield that 8th grade mathematics scores may not reflect the quality of education in a state in its entirety, this was the most complete and reliable dataset I could get access to relating to the quality of grade school education by state in the year 2024. I would argue that mathematics is much more universally standardized than subjects such as reading and writing, making this a more reliable metric of education quality.
+
+Preview of the "The Nation's Report Card" dataset:
 
 ```{r}
-library(tidyverse)
-NCES <- read_csv("data/SPCsv202603032118.csv")
-ElectionData <- read_csv("data/2024-electoral-states.csv")
 head(NCES)
 ```
+
+The other predicting variable used in this research is the percentage of people with a bachelors degree or higher by state. I was able to find this data in a set composed by Professor of Geography and Geographic Information Science Michael Minn from the University of Illinois. His dataset titled "Presidential and Congressional Election Data, 2012-2024" includes information on elections results, geographical data, and demographic data by state, which includes that education metrics I will be using in this analysis.
+
+Preview of the "Presidential and Congressional Election Data, 2012-2024" dataset:
+
 ```{r}
+head(ElectionData)
+```
+
+For this research, the outcome variable of ideology by state will be measured in terms of the percentage of of people within a state who voted for either Kamala Harris or Donald Trump in the 2024 United States presidential election. The data for this metric also comes from the dataset above provided by Dr. Michael Minn.
+
+In order to produce my analysis and compare the predicting/outcome variables, I first had to organize the data of both datasets. I removed all data in the National Center for Education Statistics that did not relate to the 50 states that we are observing for this analysis (such as data for Puerto Rico and the District of Columbia). After renaming and sorting certain variables in order to make the datasets compatible, I merged them into one singular coherent dataset that now has all of the information discussed above.
+
+```{r, echo=FALSE}
 NCES <- filter(NCES, Jurisdiction != "DoDEA")
 NCES <- filter(NCES, Jurisdiction != "Puerto Rico")
 NCES <- filter(NCES, Jurisdiction != "District of Columbia")
 NCES <- filter(NCES, Jurisdiction != "National public")
 ```
 
-```{r}
-ggplot(data = NCES, aes(x = MN)) + geom_histogram() + labs(title = "State Mathematics Performance Score", y = "Count", x = "Score")
-```
+Below is a visualization of the distribution of percentage of votes for Kamala Harris by state as found in the "Presidential and Congressional Election Data, 2012-2024" dataset (which I will be using as the outcome variable of interest):
 
-```{r}
-NCES
+```{r, echo=FALSE}
 names(ElectionData)[2] <- "Jurisdiction"
 ElectionData <- filter(ElectionData, Jurisdiction != "District of Columbia")
-ElectionData
 ```
-```{r}
+```{r, echo=FALSE}
 NewElectionData <- ElectionData [, c("Jurisdiction","ST", "Winner_2024", "Percent_Dem_2024", "Percent_GOP_2024", "Percent_Other_2024", "Percent_Bachelors_Degree") ]
 NewElectionData <- NewElectionData |>
   left_join(NCES, by = "Jurisdiction")
-NewElectionData
+```
+```{r, echo=FALSE}
+ggplot(data = ElectionData, aes(x = Percent_Dem_2024)) + geom_histogram() + labs(title = "Percentage of Vote for Harris by State", y = "Count (of States)", x = "Percentage of Vote for Harris")
 ```
 
+## Results and Visualizations
 
-After joining the election data with the NCES education data, we can use this new dataset I have created to observe trends and potential correlations between ideology and quality of education.
+The scatterplot below demonstrates a small positive correlation between states having higher percentages of democratic voters and grade 8 mathematics scores.
 
-```{r}
+```{r, echo=FALSE}
 ggplot(data = NewElectionData, aes(x = MN, y = Percent_Dem_2024)) + geom_point() +
-  geom_smooth(method = "lm")
+  geom_smooth(method = "lm") + labs(title = "Percent Vote for Harris and Mathematics Performance Scores by State", y = "Percentage of Vote for Harris", x = "8th Grade Mathematics Performance Scores")
+fit1 <- lm(Percent_Dem_2024 ~ MN, data = NewElectionData)
+fit1
 ```
 
-The scatterplot above demonstrates a small negative correlation between states having higher percentages of democratic voters and K-12 mathematics scores.
+The regression (along with the summary function) of the percent vote for Harris with the 8th grade mathematics state performance score as a predictor shows a coefficient of 0.069, a standard error of 0.218, and a p-value of 0.754. When interpreted, the coefficient demonstrates a trend that on average for every point that the state mathematics performance score increases by, the percentage vote for Harris will increase by about 0.069 percentage points. With a relatively low standard error of 0.218, there seems to be a relatively low variability. (Although this may be inaccurate given we can working with states holistically rather than a sample of the population.) There is an incredibly high p-value of 0.754. A p-value is used to measure the strength of evidence against the null hypothesis, meaning that a lower p-value demonstrates a lower likely hood of a trend being a result of randomness (the null hypothesis). With such a high p-value, we cannot be confident at all that this correlation is significant in any way.
 
-```{r}
+The scatterplot below demonstrates a postive correlation between states that have higher percentages of democratic voters and states that have higher percentages of people who have at least a Bachelors Degree.
+
+```{r, echo=FALSE}
   ggplot(data = NewElectionData, aes(x = Percent_Bachelors_Degree, y = Percent_Dem_2024)) + 
-  geom_point() + geom_smooth(method = "lm")
+  geom_point() + geom_smooth(method = "lm") + labs(title = "Percent Vote for Harris and Percent with Bachelors Degree by State", y = "Percentage of Vote for Harris", x = "Percentage of Population with Bachelors Degree or Higher")
+fit2 <- lm(Percent_Dem_2024 ~ Percent_Bachelors_Degree, data = NewElectionData)
+fit2
 ```
 
-The scatterplot above demonstrates a significant postive correlation between states having higher percentages of democratic voters and higher percentages of people who have at least a Bachelors Degree.
+The regression (along with the summary function) of the percent vote for Harris with percent of population with a Bachelors degree as a predictor shows a coefficient of 1.987, a standard error of 0.391, and a p-value of 0 (0.000006). When interpreted, the coefficient demonstrates a trend that on average for every percentage point that the percent of population with a Bachelors degree increases, the percentage vote for Harris will increase by about 1.987 percentage points. With a relatively low standard error of 0.391, there seems to be a relatively low variability. (Although this may be inaccurate given we can working with states holistically rather than a sample of the population.) There is an almost negligible p-value of 0.000006. With such a low p-value, we can be very confident that there is a significant correlation in this data.
 
-```{r}
+## Conclusion
+
+```{r, echo=FALSE}
 WinnerStats <- NewElectionData |>
   group_by(Winner_2024) |>
   summarize(mean(Percent_Bachelors_Degree), mean(MN))
 ```
-```{r}
+```{r, echo=FALSE}
 WinnerStats |>
   knitr::kable(col.names = c("States Won By:", "Mean Percent Bachelors", "Mean Mathematics Score"))
 ```
 
-The table above summarizes some of the trends I have noticed throughout my project. These results represent my current analysis in attempting to answer my research question. I have much more work to do, but my research thus far has yielded mixed results in regard to my general claim that more educated states will have more progressive populations. It seems as though more Democratic states have a stronger inclination towards higher education, but perhaps more Republican states may have more robust K-12 educations on average. It definetly seems as though there are some causal trends between education and ideology, but I will have to work further to prove that they are in fact casual and provide a more concrete answer to my initial research question.
+The table uses a slightly different methodology to show the differences in states who voted for Harris and states who voted for Trump. Rather than comparing the predictors to the percentage of the vote to any one candidate, it simply demonstrates the differents in the variables used in red and blue states. Nonetheless, it summarizes some of the trends I have noticed throughout my project. These results represent my current analysis in attempting to answer my research question. 
+
+In conclusion, it appears as though there is a positive correlation between education and liberal voting behavior. While there is no strong correlation shown between states with high 8th grade mathematics performance scores and liberal voting behavior, there does seem to be a clear trend that states with more people who pursue and achieve higher education tend to exhibit liberal voting behaviors. There are some clear limitations to this research. One such limitation that I mentioned earlier due to the fact that I am using 8th grade mathematics performance scores as indicators of quality grade school education. While this is not ideal, I do believe this to be a relevant enough metric to be at least considered as an interesting predictor. There are many potential confounders in this study, such as the potential confounder of urban settings. However, I would argue that it is likely that the factors of urban setting, high education, and liberal political ideology all influence one another to some degree. I would be interested in continuing this research and trying to look at these trends over decades to see if there appears to be a cyclical effect. I would not be surprised if more Democratic states had more robust systems of education and in turn create more liberal populations. All in all, there does appear to be support for my hypothesis that there is a significant casual correlation between education and political ideology (based on voting behavior).
+
+## Code
+
+library(tidyverse)
+library(knitr)
+library(modelsummary)
+NCES <- read_csv("data/SPCsv202604014211.csv")
+ElectionData <- read_csv("data/2024-electoral-states.csv")
+
+NCES <- filter(NCES, Jurisdiction != "DoDEA")
+NCES <- filter(NCES, Jurisdiction != "Puerto Rico")
+NCES <- filter(NCES, Jurisdiction != "District of Columbia")
+NCES <- filter(NCES, Jurisdiction != "National public")
+
+names(ElectionData)[2] <- "Jurisdiction"
+ElectionData <- filter(ElectionData, Jurisdiction != "District of Columbia")
+
+NewElectionData <- ElectionData [, c("Jurisdiction","ST", "Winner_2024", "Percent_Dem_2024", "Percent_GOP_2024", "Percent_Other_2024", "Percent_Bachelors_Degree") ]
+NewElectionData <- NewElectionData |>
+  left_join(NCES, by = "Jurisdiction")
+
+ggplot(data = ElectionData, aes(x = Percent_Dem_2024)) + geom_histogram() + labs(title = "Percentage of Vote for Harris by State", y = "Count (of States)", x = "Percentage of Vote for Harris")
+
+ggplot(data = NewElectionData, aes(x = MN, y = Percent_Dem_2024)) + geom_point() +
+  geom_smooth(method = "lm") + labs(title = "Percent Vote for Harris and Mathematics Performance Scores by State", y = "Percentage of Vote for Harris", x = "8th Grade Mathematics Performance Scores")
+  
+fit1 <- lm(Percent_Dem_2024 ~ MN, data = NewElectionData)
+summary(fit1)
+fit1
+
+ggplot(data = NewElectionData, aes(x = Percent_Bachelors_Degree, y = Percent_Dem_2024)) + 
+  geom_point() + geom_smooth(method = "lm") + labs(title = "Percent Vote for Harris and Percent with Bachelors Degree by State", y = "Percentage of Vote for Harris", x = "Percentage of Population with Bachelors Degree or Higher")
+  
+fit2 <- lm(Percent_Dem_2024 ~ Percent_Bachelors_Degree, data = NewElectionData)
+summary(fit2)
+fit2
+
+WinnerStats <- NewElectionData |>
+  group_by(Winner_2024) |>
+  summarize(mean(Percent_Bachelors_Degree), mean(MN))
+
+WinnerStats |>
+  knitr::kable(col.names = c("States Won By:", "Mean Percent Bachelors", "Mean Mathematics Score"))
+
